@@ -4,6 +4,8 @@
  // connect to database
  // 1. database info
 
+ session_start();
+
 $host = "127.0.0.1";
 $database_name = "todo_app";
 $database_user = "root";
@@ -47,10 +49,22 @@ $todos = $query->fetchAll(); ?>
   <body>
     <div
       class="card rounded shadow-sm"
-      style="max-width: 500px; margin: 60px auto"
+      style="max-width: 500px; margin: 60px auto 30px auto"
     >
       <div class="card-body">
         <h3 class="card-title mb-3">My Todo List</h3>
+        <?php if ( isset( $_SESSION["user"] ) ) : ?>
+        <div>
+          <a href="logout.php"></a>
+        </div>
+        <?php else: ?>
+        <!-- If user is not logged in -->
+        <div>
+          <a href="login.php">Login</a>
+          <a href="signup.php">Sign Up</a>
+        </div>
+        <?php endif; ?>
+        <?php if ( isset( $_SESSION["user"] ) ) : ?>
         <!-- tasks  -->
         <?php foreach ($todos as $index =>
         $todo) { ?>
@@ -67,15 +81,16 @@ $todos = $query->fetchAll(); ?>
                 <button class="btn btn-sm btn-success">
                   <i class="bi bi-check-square"></i>
                 </button>
-                <span class="ms-2 text-decoration-line-through"><?php echo $todo["label"];?> </span>
+                <span class="ms-2 text-decoration-line-through"
+                  ><?php echo $todo["label"];?>
+                </span>
                 <?php } else { ?>
-                  <button class="btn btn-sm btn-light">
-                    <i class="bi bi-square"></i>
+                <button class="btn btn-sm btn-light">
+                  <i class="bi bi-square"></i>
                 </button>
-                <span class="ms-2 "><?php echo $todo["label"];?> </span>
+                <span class="ms-2"><?php echo $todo["label"];?> </span>
                 <?php } ?>
-              </form>  
-              
+              </form>
             </div>
             <!-- delete button  -->
             <form method="POST" action="delete_task.php">
@@ -109,7 +124,16 @@ $todos = $query->fetchAll(); ?>
           </form>
         </div>
         <!-- add tasks  -->
+        <?php endif; ?>
       </div>
+    </div>
+
+    <div class="mt-1 d-flex justify-content-center">
+      <?php if ( isset( $_SESSION["user"] ) ) : ?>
+        <div>
+          <a href="logout.php">Logout</a>
+        </div>
+      <?php endif; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
